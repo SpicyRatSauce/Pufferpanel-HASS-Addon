@@ -18,6 +18,7 @@ schema:
   web_port: int
 map:
   - config:rw
+  - share:rw
 panel_icon: mdi:server
 panel_title: "PufferPanel"
 ingress: false
