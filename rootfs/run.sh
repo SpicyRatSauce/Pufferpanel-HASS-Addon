@@ -1,48 +1,49 @@
 #!/bin/bash
 
-# Ensure /data is valid
-[ -f /data ] && rm /data
-mkdir -p /data/etc /data/var/lib/pufferpanel/servers
+set -e
 
-# Remove default paths and symlink to /data
+# Ensure /data is valid and has required structure
+[ -f /share/pufferpanel ] && rm /share/pufferpanel
+
+# Create Temp Folders
+mkdir -p /share/pufferpanel /share/pufferpanel/var /share/pufferpanel/etc /share/pufferpanel/temp /share/pufferpanel/temp/etc /share/pufferpanel/temp/var
+
+# Copy files to temp folders
+cp -r /etc/pufferpanel /share/pufferpanel/temp/etc
+cp -r /var/lib/pufferpanel /share/pufferpanel/temp/var
+
+
+# Replace /etc/pufferpanel with symlink to /share/pufferpanel/etc
 rm -rf /etc/pufferpanel
-ln -s /data/etc /etc/pufferpanel
+ln -s /share/pufferpanel/etc /etc/pufferpanel
 
-rm -rf /var/lib/pufferpanel/servers
-mkdir -p /data/var/lib/pufferpanel/servers
-ln -s /data/var/lib/pufferpanel/servers /var/lib/pufferpanel/servers
+# Replace /var/lib/pufferpanel with symlink to /share/pufferpanel/
+rm -rf /var/lib/pufferpanel
+ln -s /share/pufferpanel/var /var/lib/pufferpanel
 
-# Copy default config.json if it doesn't exist
-if [ ! -f "/data/config.json" ]; then
-  echo "[INFO] Copying default config.json to /data"
-  cp /defaults/config.json /data/etc
+
+# Copy default config.json if not present
+if [ ! -f "/share/pufferpanel/etc/config.json" ]; then
+  echo "[INFO] Copying default config.json to /share/pufferpanel/etc"
+  cp /defaults/config.json /share/pufferpanel/etc/
 fi
 
-# Copy default email templates if missing
-if [ ! -d "/data/email" ]; then
-  echo "[INFO] Copying email templates to /data"
-  cp -r /pufferpanel/email /data/
-fi
-
-# Copy default www files if missing
-if [ ! -d "/data/www" ]; then
-  echo "[INFO] Copying www files to /data"
-  cp -r /pufferpanel/www /data/
-fi
+# Remove temp folder
+rm -r /share/pufferpanel/temp
 
 # Create admin user if DB is missing
-if [ ! -f /data/etc/database.db ]; then
-    echo "[INFO] Initializing database and creating admin user..."
-    /pufferpanel/pufferpanel run --workDir /data/etc &
-    sleep 3
-    pkill -f "pufferpanel run"
-    /pufferpanel/pufferpanel user add \
-        --workDir /data/etc \
-        --name admin \
-        --email admin@hassio.com \
-        --password hassio \
-        --admin
+if [ ! -f /share/pufferpanel/etc/database.db ]; then
+  echo "[INFO] Initializing database and creating admin user..."
+  /pufferpanel/pufferpanel run --workDir /share/pufferpanel/etc &
+  sleep 5
+  pkill -f "pufferpanel run" || true
+  /pufferpanel/pufferpanel user add \
+      --workDir /share/pufferpanel/etc \
+      --name admin \
+      --email admin@hassio.com \
+      --password hassio \
+      --admin
 fi
 
-# Run PufferPanel
-exec /pufferpanel/pufferpanel run --workDir /data/etc
+# Start PufferPanel with config in /share/pufferpanel/etc
+exec /pufferpanel/pufferpanel run --workDir /share/pufferpanel/etc
