@@ -1,22 +1,21 @@
 {
-  "logs": "/data/log",
+  "logs": "/pufferpanel/log",
   "panel": {
     "database": {
       "dialect": "sqlite3",
-      "url": "file:/data/database.db?cache=shared"
+      "url": "file:/pufferpanel/database.db?cache=shared"
     },
     "email": {
-      "templates": "/data/email/emails.json"
+      "templates": "/pufferpanel/email/emails.json"
     },
     "web": {
-      "files": "/data/www/pufferpanel"
+      "files": "/pufferpanel/www/pufferpanel"
     }
   },
   "daemon": {
     "data": {
-      "root": "/data",
-      "binaries": "/data/binaries",
-      "servers": "/data/servers"
+      "root": "/pufferpanel",
+      "binaries": "/var/lib/pufferpanel/binaries"
     }
   },
   "web": {
