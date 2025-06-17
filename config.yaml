@@ -1,0 +1,23 @@
+name: PufferPanel
+version: "1.0.0"
+slug: pufferpanel
+description: Game server management panel
+arch:
+  - amd64
+  - aarch64
+startup: services
+boot: auto
+init: true
+ports:
+  8080/tcp: 8080
+  25565/tcp: 25565
+  25575/tcp: 25575
+options:
+  web_port: 8080
+schema:
+  web_port: int
+map:
+  - config:rw
+panel_icon: mdi:server
+panel_title: "PufferPanel"
+ingress: false
