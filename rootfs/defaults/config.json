@@ -1,0 +1,25 @@
+{
+  "logs": "/data/log",
+  "panel": {
+    "database": {
+      "dialect": "sqlite3",
+      "url": "file:/data/database.db?cache=shared"
+    },
+    "email": {
+      "templates": "/data/email/emails.json"
+    },
+    "web": {
+      "files": "/data/www/pufferpanel"
+    }
+  },
+  "daemon": {
+    "data": {
+      "root": "/data",
+      "binaries": "/data/binaries",
+      "servers": "/data/servers"
+    }
+  },
+  "web": {
+    "host": "0.0.0.0:8080"
+  }
+}
