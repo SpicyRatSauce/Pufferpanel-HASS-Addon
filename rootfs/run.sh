@@ -31,19 +31,17 @@ fi
 # Remove temp folder
 rm -r /share/pufferpanel/temp
 
-# Create admin user if DB is missing
-if [ ! -f /share/pufferpanel/etc/database.db ]; then
-  echo "[INFO] Initializing database and creating admin user..."
-  /pufferpanel/pufferpanel run --workDir /share/pufferpanel/etc &
-  sleep 5
-  pkill -f "pufferpanel run" || true
+# Only create admin user if they don't exist
+if ! /pufferpanel/pufferpanel user list --workDir /share/pufferpanel/etc | grep -q admin@hassio.com; then
+  echo "[INFO] Creating admin user..."
   /pufferpanel/pufferpanel user add \
-      --workDir /share/pufferpanel/etc \
-      --name admin \
-      --email admin@hassio.com \
-      --password hassio \
-      --admin
+    --workDir /share/pufferpanel/etc \
+    --name admin \
+    --email admin@hassio.com \
+    --password hassio \
+    --admin
 fi
 
+
 # Start PufferPanel with config in /share/pufferpanel/etc
-exec /pufferpanel/pufferpanel run --workDir /share/pufferpanel/etc
+exec /pufferpanel/pufferpanel run --workDir /pufferpanel/
