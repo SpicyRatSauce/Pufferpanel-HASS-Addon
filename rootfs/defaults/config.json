@@ -9,16 +9,17 @@
       "templates": "/pufferpanel/email/emails.json"
     },
     "web": {
-      "files": "/pufferpanel/www/pufferpanel"
+      "files": "/pufferpanel/www/pufferpanel",
+      "host": "0.0.0.0:8080"
     }
   },
   "daemon": {
     "data": {
-      "root": "/pufferpanel",
       "binaries": "/var/lib/pufferpanel/binaries"
     }
   },
   "web": {
-    "host": "0.0.0.0:8080"
+    "host": "0.0.0.0:8080",
+    "files": "/share/pufferpanel/www"
   }
 }
